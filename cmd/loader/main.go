@@ -10,7 +10,7 @@ import (
 func main() {
 	cfg := config.Config{
 		TargetAddr: "localhost:50051",
-		RPS:        10,
+		RPS:        100,
 		Duration:   10 * time.Second,
 		Workers:    20,
 	}

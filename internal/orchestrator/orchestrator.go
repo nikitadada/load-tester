@@ -2,7 +2,6 @@ package orchestrator
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/nikitadada/load-tester/internal/config"
@@ -25,7 +24,14 @@ func (o *Orchestrator) Run() {
 	defer cancel()
 
 	collector := metrics.NewCollector()
-	client := grpcclient.NewDummy()
+	client, err := grpcclient.NewPingClient(o.cfg.TargetAddr)
+	if err != nil {
+		panic(err)
+	}
+	defer client.Close()
+
+	go collector.Start(ctx)
+	go metrics.StartPrinter(ctx, collector.Stats())
 
 	workers := make([]*worker.Worker, o.cfg.Workers)
 	for i := range workers {
@@ -63,11 +69,4 @@ func (o *Orchestrator) Run() {
 
 	<-ctx.Done()
 	wg.Wait()
-
-	total, errors, avg := collector.Summary()
-
-	fmt.Println("==== TEST RESULT ====")
-	fmt.Println("total:", total)
-	fmt.Println("errors:", errors)
-	fmt.Println("avg latency:", avg)
 }

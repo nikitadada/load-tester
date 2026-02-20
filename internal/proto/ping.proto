@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package ping;
+
+option go_package = "github.com/nikitadada/load-tester/gen/ping";
+
+service PingService {
+  rpc Ping(PingRequest) returns (PingResponse);
+}
+
+message PingRequest {
+  string message = 1;
+}
+
+message PingResponse {
+  string message = 1;
+}
