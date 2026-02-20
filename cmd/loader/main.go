@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"github.com/nikitadada/load-tester/internal/config"
 	"github.com/nikitadada/load-tester/internal/orchestrator"
 )
@@ -10,11 +8,14 @@ import (
 func main() {
 	cfg := config.Config{
 		TargetAddr: "localhost:50051",
-		RPS:        100,
-		Duration:   10 * time.Second,
-		Workers:    20,
+		Workers:    50,
 	}
 
 	orch := orchestrator.New(cfg)
-	orch.Run()
+
+	// обычный тест
+	// orch.Run()
+
+	// capacity discovery
+	orch.RunCapacitySearch()
 }
